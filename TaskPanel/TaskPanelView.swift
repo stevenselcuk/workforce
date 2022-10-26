@@ -24,7 +24,7 @@ struct TaskPanelView: View {
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     @State var timeRemaining = 10
 
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)], predicate: NSPredicate(format: "(createdAt >= %@) AND (createdAt <= %@)", Manager.share.theDay as CVarArg, Manager.share.theDay.dateAtEndOf(.day) as CVarArg))
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.order)], predicate: NSPredicate(format: "(createdAt >= %@) AND (createdAt <= %@)", Manager.share.theDay as CVarArg, Manager.share.theDay.dateAtEndOf(.day) as CVarArg))
     var tasks: FetchedResults<Task>
     
     var sum: Int64 {  Int64(tasks.reduce(0) { $0 + $1.duration }) }
@@ -48,7 +48,7 @@ struct TaskPanelView: View {
                         .cornerRadius(4)
                     ScrollView(.horizontal) {
                         HStack {
-                            ForEach(Array(Manager.tasks().enumerated()), id: \.element) { _, task in
+                            ForEach(Array(tasks.enumerated()), id: \.element) { _, task in
                                 HStack {
                                     if task.isDone == true {
                                         Text("🍔")
@@ -240,10 +240,10 @@ struct TaskPanelView: View {
                     manager.isTimerRunning = false
 
                     if manager.nextTask == nil && task.inProgress == false {
-                        manager.isDayFinished = true
-                        manager.menubarMessage = "Total \(Manager.finishedHoursMins()) worked"
+                      //  manager.isDayFinished = true
+                      //  manager.menubarMessage = "Total \(Manager.finishedHoursMins()) worked"
                     } else {
-                        manager.isDayFinished = false
+                       // manager.isDayFinished = false
                     }
 
                     if manager.nextTask != nil && self.autoMode == true {
@@ -252,6 +252,7 @@ struct TaskPanelView: View {
                         }
                         manager.currentTask = manager.nextTask
                         manager.currentTask?.notStarted = false
+                        manager.currentTask?.isTaskPaused = false
                         manager.currentTask?.inProgress = true
                         manager.isTimerRunning = true
                         try? data.context.save()

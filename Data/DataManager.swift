@@ -86,7 +86,7 @@ extension PersistenceProvider {
         fetchRequest.predicate = NSPredicate(format: "(createdAt >= %@) AND (createdAt <= %@)", filterDate as CVarArg, filterDate.dateAtEndOf(.day) as CVarArg)
         fetchRequest.sortDescriptors = [NSSortDescriptor(
             keyPath: \Task.order,
-            ascending: true)]
+            ascending: false)]
         do {
             let result = try context.fetch(fetchRequest)
             return result

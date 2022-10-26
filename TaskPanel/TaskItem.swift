@@ -70,7 +70,6 @@ struct TaskItem: View {
                             manager.currentTask!.isTaskPaused = true
                             manager.currentTask!.inProgress = false
                             manager.isTimerRunning = false
-
                             try? data.context.save()
                         } else if manager.currentTask!.isTaskPaused == true && manager.currentTask!.notStarted == false && manager.currentTask!.inProgress == false {
                             manager.currentTask!.isTaskPaused = false
@@ -79,6 +78,10 @@ struct TaskItem: View {
                             try? data.context.save()
                         } else {
                             print("EDGE CASE")
+                            manager.currentTask!.isTaskPaused = true
+                            manager.currentTask!.inProgress = false
+                            manager.isTimerRunning = false
+                            try? data.context.save()
                         }
                         try? data.context.save()
                     }
