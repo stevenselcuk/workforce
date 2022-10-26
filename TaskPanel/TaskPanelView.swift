@@ -26,21 +26,15 @@ struct TaskPanelView: View {
 
     @FetchRequest(sortDescriptors: [SortDescriptor(\.createdAt)], predicate: NSPredicate(format: "(createdAt >= %@) AND (createdAt <= %@)", Manager.share.theDay as CVarArg, Manager.share.theDay.dateAtEndOf(.day) as CVarArg))
     var tasks: FetchedResults<Task>
-
-    var sum: Int64 {
-        Int64(tasks.reduce(0) { $0 + $1.duration })
-    }
-
-    @State private var update: UUID = UUID()
-    @State var updater: Bool = false
+    
+    var sum: Int64 {  Int64(tasks.reduce(0) { $0 + $1.duration }) }
+    
     @State var showingPrefPop: Bool = false
     @State var autoMode: Bool = storage.optionalBool(forKey: "autoMode") ?? true
     @State var notificationsOn: Bool = storage.optionalBool(forKey: "notificationsOn") ?? false
     @State var totalWorkForce: Float = storage.optionalFloat(forKey: "totalWorkForce") ?? 60 * 60 * 8
 
     @State var launchAtLogin: Bool = storage.bool(forKey: "launchAtLogin")
-
-    var color3 = #colorLiteral(red: 1, green: 0.003921568627, blue: 0.4588235294, alpha: 1)
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -50,14 +44,14 @@ struct TaskPanelView: View {
                     Text(Manager.counter(time: TimeInterval(manager.currentTaskRemainingTime)))
                         .fontMonoMedium(color: Color("TextMain"), size: 18)
                         .padding(.all, 6)
-                        .background(Color.gray.opacity(0.8))
+                        .background(Color.gray.opacity(0.3))
                         .cornerRadius(4)
                     ScrollView(.horizontal) {
                         HStack {
-                            ForEach(Array(Manager.tasks().enumerated()), id: \.element) { index, task in
+                            ForEach(Array(Manager.tasks().enumerated()), id: \.element) { _, task in
                                 HStack {
                                     if task.isDone == true {
-                                        Image(systemName: "checkmark")
+                                        Text("🍔")
                                             .font(.system(size: 16))
                                             .padding(.horizontal, 4)
                                     } else if task.inProgress == true {
@@ -65,7 +59,7 @@ struct TaskPanelView: View {
                                             .font(.system(size: 16))
                                             .padding(.horizontal, 4)
                                     } else {
-                                        Image(systemName: "circle")
+                                        Text("🧅")
                                             .font(.system(size: 16))
                                             .padding(.horizontal, 4)
                                     }
@@ -80,7 +74,6 @@ struct TaskPanelView: View {
                                 .background(task.isDone == true ? Color("AccentColor") : task.inProgress == true ? Color("Yellow") : Color(hex: "#1A1918"))
                                 .cornerRadius(4)
                             }
-                            .id(update)
                         }
                     }.frame(width: 550)
                 }
@@ -194,19 +187,18 @@ struct TaskPanelView: View {
                     if manager.isTimerRunning {
                         Text("Finished \(Manager.finishedPercent())% of daily workload")
                             .fontMonoMedium(color: Color("TextMain"), size: 10)
-                        
+
                         Text("Worked \(Manager.finishedHoursMins())")
                             .fontMonoMedium(color: Color("TextMain"), size: 10)
-                           
+
                     } else {
                         Text("Reached \(Manager.plannedPercent())% of daily workforce")
                             .fontMonoMedium(color: Color("TextMain"), size: 10)
                             .foregroundColor(Manager.checkLimit() ? Color(hex: "#FAC24F") : Color("TextMain"))
-                            
+
                         Text("Planned \(Manager.plannedHoursMins()) of work")
                             .fontMonoMedium(color: Color("TextMain"), size: 10)
                             .foregroundColor(Manager.checkLimit() ? Color(hex: "#FAC24F") : Color("TextMain"))
-                           
                     }
                 }
                 .padding()
@@ -227,6 +219,7 @@ struct TaskPanelView: View {
         .onReceive(timer) { _ in
             if let task = manager.currentTask {
                 if task.inProgress == true && task.duration == 60 {
+                    NSSound(named: "select")?.play()
                 }
                 if task.inProgress == true && task.duration > 1 {
                     task.duration = (task.duration - 1).rounded()
@@ -255,7 +248,7 @@ struct TaskPanelView: View {
 
                     if manager.nextTask != nil && self.autoMode == true {
                         if task.isDone == true {
-                            NSSound(named: "done")?.play()
+                            NSSound(named: "error")?.play()
                         }
                         manager.currentTask = manager.nextTask
                         manager.currentTask?.notStarted = false
@@ -287,23 +280,15 @@ struct TaskPanelView: View {
                         }
                     }
                 }
-
-                update = UUID()
-                updater.toggle()
             }
-        }
-        .onAppear {
         }
         .background(Color.clear)
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .center)
         .onAppear(perform: {
             observer1 = NotificationCenter.default.addObserver(forName: NSWindow.didResignKeyNotification, object: nil, queue: OperationQueue.main) { _ in
                 Manager.share.theDay = Date().dateAtStartOf(.day)
-                Manager.share.id = UUID()
-                update = UUID()
-                updater.toggle()
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                     if Manager.share.taskEntryPanelFocused == false {
                         (NSApp.delegate as! AppDelegate).closeTaskEntryPanelWindow()
                         (NSApp.delegate as! AppDelegate).closeTaskPanelWindow()
@@ -313,10 +298,7 @@ struct TaskPanelView: View {
 
             observer2 = NotificationCenter.default.addObserver(forName: NSWindow.didResignMainNotification, object: nil, queue: OperationQueue.main) { _ in
                 Manager.share.theDay = Date().dateAtStartOf(.day)
-                Manager.share.id = UUID()
-                update = UUID()
-                updater.toggle()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
                     if Manager.share.taskEntryPanelFocused == false {
                         (NSApp.delegate as! AppDelegate).closeTaskEntryPanelWindow()
                         (NSApp.delegate as! AppDelegate).closeTaskPanelWindow()
@@ -329,60 +311,5 @@ struct TaskPanelView: View {
             NotificationCenter.default.removeObserver(observer1 as Any)
             NotificationCenter.default.removeObserver(observer2 as Any)
         })
-    }
-}
-
-struct FilteredList<T: NSManagedObject>: View {
-    var fetchRequest: FetchRequest<Task>
-    var tasks: FetchedResults<Task> { fetchRequest.wrappedValue }
-    var data = PersistenceProvider.default
-    @ObservedObject var manager = Manager.share
-    var body: some View {
-        if tasks.count > 0 {
-            List {
-                ForEach(Array(tasks.enumerated()), id: \.offset) { index, entry in
-                    TaskItem(task: entry, tasks: tasks, index: index)
-                        .padding(.bottom, 10)
-                }
-                .onMove(perform: move)
-            }
-            .removeBackground()
-            .frame(height: 500)
-            .edgesIgnoringSafeArea(.all)
-
-        } else {
-            Spacer()
-            VStack(alignment: .center, spacing: 0) {
-                Image("WingMain")
-                    .resizable()
-                    .frame(width: 64, height: 64, alignment: .center)
-                Text("workforce")
-                    .fontMonoMedium(color: Color("TextMain"), size: 22)
-                Text("Create your tasks, ignite your day")
-                    .fontBold(color: Color("TextMain"), size: 12)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            Spacer()
-        }
-    }
-
-    func move(from source: IndexSet, to destination: Int) {
-        var revisedItems: [Task] = tasks.map { $0 }
-        revisedItems.move(fromOffsets: source, toOffset: destination)
-
-        for reverseIndex in stride(from: revisedItems.count - 1,
-                                   through: 0,
-                                   by: -1) {
-            revisedItems[reverseIndex].order =
-                Int16(reverseIndex)
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-            try? data.context.save()
-            // manager.id = UUID()
-        })
-    }
-
-    init(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor] = []) {
-        fetchRequest = FetchRequest<Task>(entity: Task.entity(), sortDescriptors: sortDescriptors, predicate: predicate)
     }
 }

@@ -163,7 +163,6 @@ struct TaskEntryPanelView: View {
              NotificationCenter.default.removeObserver(observer2 as Any)
          })
          .onChange(of: isFocused, perform: { newVal in
-             print(newVal)
              Manager.share.taskEntryPanelFocused = newVal
          })
         .background(Color.clear)

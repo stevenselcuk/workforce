@@ -15,7 +15,7 @@ struct ProgressRing: View {
     var isOnProgress: Bool
     var isPaused: Bool
     var isDone: Bool
-    var onClick: () -> Void
+  //  var onClick: () -> Void
     @State private var hovered = false
     @State private var tapped = false
     var green = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
@@ -49,7 +49,7 @@ struct ProgressRing: View {
                     Image(systemName: "checkmark")
                         .font(.system(size: 16))
                         .foregroundColor(.green)
-                } else if isOnProgress == true {
+                } else if isOnProgress == true &&  isPaused == false {
                     if hovered == true {
                         Image(systemName: "pause.fill")
                             .font(.system(size: 18))
@@ -85,12 +85,12 @@ struct ProgressRing: View {
                 }
                
             })
-            .shadow(color: color.opacity(isOnProgress ? 0.4 : 0), radius: 2)
+          //  .shadow(color: color.opacity(isOnProgress ? 0.4 : 0), radius: 2)
             .scaleEffect(hovered ? 1.1 : 1.0)
             .animation(.easeInOut(duration: 0.3), value: hovered)
-            .simultaneousGesture(TapGesture().onEnded {
+          /*  .simultaneousGesture(TapGesture().onEnded {
                 if isDone == true { return }
                 onClick()
-            })
+            })*/
     }
 }
