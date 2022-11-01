@@ -74,11 +74,15 @@ struct TaskEntryPanelView: View {
                         task.duration = taskDuration
                         task.fullDuration = taskDuration
                         task.order = Int16(manager.lastOrder)
-                        
+                       
                         try? data.context.save()
+                        manager.lastOrder = manager.lastOrder + 1
+
                         note = ""
-                        manager.id = UUID()
+                     //   manager.id = UUID()
+                        
                         storage.set(manager.lastOrder + 1, forKey: "lastOrder")
+                        say.debug("New task created. Last order number: \(manager.lastOrder)")
                     }
                     .focusable()
                         .touchBar {

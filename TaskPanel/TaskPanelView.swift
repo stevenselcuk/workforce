@@ -52,24 +52,25 @@ struct TaskPanelView: View {
                                 HStack {
                                     if task.isDone == true {
                                         Text("🍔")
-                                            .font(.system(size: 16))
-                                            .padding(.horizontal, 4)
+                                            .font(.system(size: 14))
+                                            .padding(.leading, 4)
                                     } else if task.inProgress == true {
                                         Text("🚀")
-                                            .font(.system(size: 16))
-                                            .padding(.horizontal, 4)
+                                            .font(.system(size: 14))
+                                            .padding(.leading, 4)
                                     } else {
                                         Text("🧅")
-                                            .font(.system(size: 16))
-                                            .padding(.horizontal, 4)
+                                            .font(.system(size: 14))
+                                            .padding(.leading, 4)
                                     }
                                     Text(task.title ?? "")
-                                        .fontBold(size: 12)
+                                        .fontBold(size: 10)
                                         .foregroundColor(task.isDone == true ? Color(hex: "#FFFFFF") : task.inProgress == true ? Color(hex: "#FFFFFF") : Color(hex: "#949494"))
                                         .truncationMode(.middle)
                                         .lineLimit(1)
                                         .frame(width: 100, alignment: .leading)
                                         .padding(.vertical, 6)
+                                        .padding(.trailing, 6)
                                 }
                                 .background(task.isDone == true ? Color("AccentColor") : task.inProgress == true ? Color("Yellow") : Color(hex: "#1A1918"))
                                 .cornerRadius(4)

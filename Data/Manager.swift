@@ -124,6 +124,6 @@ class Manager: ObservableObject {
     
     static public func checkLimit() -> Bool {
         let tasks = PersistenceProvider.default.getFilteredTasks(filterDate: Manager.share.theDay)
-        return tasks.reduce(0) { $0 + $1.fullDuration } / 28800 * 100 > 90
+        return tasks.reduce(0) { $0 + $1.fullDuration } / Manager.share.dailyWorkForce * 100 > 90
     }
 }

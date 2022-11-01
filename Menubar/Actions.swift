@@ -142,7 +142,7 @@ extension AppDelegate {
     
     func openAboutWindow() {
         aboutWindow = NSWindow(
-            contentRect: NSRect(x: -((NSScreen.main?.frame.height)! / 2 - 250), y: -((NSScreen.main?.frame.width)! / 2 + 300), width: 200, height: 200),
+            contentRect: NSRect(x: -((NSScreen.main?.frame.height)! / 2 - 250), y: -((NSScreen.main?.frame.width)! / 2 + 300), width: 300, height: 380),
             styleMask: [.titled, .borderless, .closable],
             backing: .buffered, defer: false)
 

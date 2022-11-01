@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import OSLog
+let say = Logger(subsystem: "org.tabbycatllc.workforce",
+       category: "tabbycat")
 
 struct Constants {
       // Helper Application Bundle Identifier

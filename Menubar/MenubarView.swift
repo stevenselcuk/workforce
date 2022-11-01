@@ -20,7 +20,7 @@ struct MenubarView: View {
             }
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: .infinity, alignment: .center)
-        } else if manager.nextTask == nil || manager.isDayFinished == true {
+        } else if manager.isDayFinished == true {
             LazyHStack(alignment: .center, spacing: 0) {
                 HStack(alignment: .center, spacing: 3) {
                     Image("WingMenubar")
@@ -31,7 +31,7 @@ struct MenubarView: View {
                     .padding(.vertical, 3)
 
                 Spacer()
-                Text("You have worked \(Manager.finishedHoursMins())")
+                Text("Last task! Worked \(Manager.finishedHoursMins())")
                     .fontMonoMedium(color: .white, size: 12)
                     .padding(.horizontal, 4)
             }
