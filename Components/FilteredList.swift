@@ -17,7 +17,7 @@ struct FilteredList<T: NSManagedObject>: View {
             List {
                 ForEach(Array(tasks.enumerated()), id: \.offset) { index, entry in
                     TaskItem(task: entry, tasks: tasks, index: index)
-                        .padding(.bottom, 10)
+                        .padding(.bottom, 20)
                 }
                 .onMove(perform: move)
             }

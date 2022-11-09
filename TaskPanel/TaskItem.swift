@@ -16,6 +16,15 @@ struct TaskItem: View {
     @State private var animationAmount: CGFloat = 1
     @State private var showingItemPopover: Bool = false
     @State private var hovered = false
+    @State private var isEditing = false
+    @State private var editingTitle = ""
+
+    enum FocusField: Hashable {
+        case field
+    }
+
+    @FocusState private var focusedField: FocusField?
+
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
             ProgressRing(progress: task.isDone ? 1 : Double(task.runnedTime / task.fullDuration), percent: (task.runnedTime / task.fullDuration) * 100, color: task.isDone ? .green : task.inProgress ? .yellow : task.isTaskPaused ? .orange : .red, isNotStarted: task.notStarted, isOnProgress: task.inProgress, isPaused: task.isTaskPaused, isDone: task.isDone)
@@ -91,16 +100,82 @@ struct TaskItem: View {
                 .overlay(content: {
                     if index != (tasks.count - 1) && task.duration < 60 {
                         Image(systemName: "arrow.down")
-                            .offset(x: 2, y: 35)
+                            .offset(x: 2, y: 42)
                     }
                 })
 
             VStack(alignment: .leading, spacing: 5) {
-                Text(task.title ?? "")
-                    .fontBold(size: 16)
-                    .truncationMode(.middle)
-                    .lineLimit(1)
-                    .frame(width: 550, alignment: .leading)
+                if task.isDone {
+                    VStack(alignment: .leading) {
+                        Text("\(task.title ?? "")  ")
+                            .fontBold(size: 16)
+                            .truncationMode(.middle)
+                            .lineLimit(1)
+                            .frame(width: 550, alignment: .leading)
+                        if task.runnedTime > task.fullDuration {
+                            Text("Planned\(task.fullDuration.hoursMinutesSecondsFormatFull) Actual: \(task.runnedTime.hoursMinutesSecondsFormatFull) + \(task.additionalTime.hoursMinutesSecondsFormatFull)")
+                                .fontMonoMedium(color: .white, size: 10)
+                                .foregroundColor(task.fullDuration < task.runnedTime ? Color("Red") : Color("Green"))
+                                .opacity(0.5)
+                                .frame(width: 550, alignment: .leading)
+                        } else {
+                            Text("Planned \(task.fullDuration.hoursMinutesSecondsFormatFull)")
+                                .fontMonoMedium(color: .white, size: 10)
+                                .foregroundColor(task.fullDuration < task.runnedTime ? Color("Red") : Color("Green"))
+                                .opacity(0.5)
+                                .frame(width: 550, alignment: .leading)
+                        }
+                       
+                    }
+
+                } else {
+                    Text(task.title ?? "")
+                        .fontBold(size: 16)
+                        .truncationMode(.middle)
+                        .lineLimit(1)
+                        .frame(width: 550, alignment: .leading)
+                        .onTapGesture {
+                            isEditing = true
+                        }
+                        .onChange(of: isEditing, perform: { newVal in
+                            if newVal == false {
+                                if editingTitle.isEmpty {
+                                    task.title = "Task #\(index + 1)"
+                                } else {
+                                    task.title = editingTitle
+                                }
+                               
+                                try? data.context.save()
+                            } else {
+                                editingTitle = task.title ?? ""
+                            }
+                        })
+                        .popover(isPresented: $isEditing) {
+                            VStack {
+                                TextField(task.title ?? "", text: $editingTitle)
+                                    
+                                    .frame(width: 390, alignment: .leading)
+                                    .textFieldStyle(PlainTextFieldStyle())
+                                    .background(.clear)
+                                    .multilineTextAlignment(.leading)
+                                    .truncationMode(.middle)
+                                    .lineLimit(2)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .font(Font.custom("Gilroy Semibold", size: 22, relativeTo: .body))
+                                    .onSubmit {
+                                        task.title = editingTitle
+                                        try? data.context.save()
+                                        isEditing = false
+                                    }
+                                    .onAppear {
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                                            self.focusedField = .field
+                                        }
+                                    }
+                            }
+                                    .frame(minWidth: 400, maxWidth: .infinity, minHeight: 70, maxHeight: .infinity, alignment: .center)
+                        }
+                }
 
             }.padding()
                 .animation(.easeInOut(duration: 0.4), value: hovered)
@@ -142,15 +217,19 @@ struct TaskItem: View {
                             } onIncrement: {
                                 if task.duration / 60 > 59 {
                                     task.duration += 60 * 10
+                                    task.additionalTime += 60 * 10
                                 } else {
                                     task.duration += 60
+                                    task.additionalTime += 60
                                 }
                                 try? data.context.save()
                             } onDecrement: {
                                 if task.duration / 60 > 59 {
                                     task.duration -= 60 * 10
+                                    task.additionalTime -= 60 * 10
                                 } else {
                                     task.duration -= 60
+                                    task.additionalTime -= 60
                                 }
                                 if task.duration > 1 {
                                     try? data.context.save()
