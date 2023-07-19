@@ -16,13 +16,6 @@
 
 
   </p>
-
- <img
-      src="https://i.imgur.com/0EOzJkz.gif"
-      alt="workforce"
-      title="workforce"
-    />
-
  
 
 ##  About
