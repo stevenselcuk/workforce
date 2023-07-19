@@ -18,7 +18,7 @@
   </p>
 
 <a href="https://github.com/stevenselcuk/workforce/releases/download/Initial/workforce.zip" target="_blank">
- <p align="center">Download</p>
+Download: 📦 v1.0.0
   </p>
 
 
