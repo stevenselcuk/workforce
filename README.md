@@ -28,3 +28,7 @@ Features
 - Menubar task + timer
 - History
 - Pomodoro ready
+
+## How to ?
+
+Click the menubar icon or use control + command + t combo to open the app 🚀
