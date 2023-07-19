@@ -7,7 +7,7 @@
 <br>
 
 <p align="center">
-<a href="https://apps.apple.com/us/app/tabbynote-micro-note-taking/id1555858947" target="_blank">
+<a href="https://github.com/stevenselcuk/workforce/releases/download/Initial/workforce.zip" target="_blank">
     <img
       src="https://i.imgur.com/8gtGNIX.png"
       alt="workforce"
@@ -16,7 +16,12 @@
 
 
   </p>
- 
+
+<a href="https://github.com/stevenselcuk/workforce/releases/download/Initial/workforce.zip" target="_blank">
+ <p align="center">Download</p>
+  </p>
+
+
 
 ##  About
 
