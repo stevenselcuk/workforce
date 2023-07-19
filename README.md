@@ -9,7 +9,7 @@
 <p align="center">
 <a href="https://apps.apple.com/us/app/tabbynote-micro-note-taking/id1555858947" target="_blank">
     <img
-      src="https://i.imgur.com/oJbCmsV.jpg"
+      src="https://i.imgur.com/8gtGNIX.png"
       alt="workforce"
       title="workforce"
     /></a>
@@ -21,8 +21,7 @@
       src="https://i.imgur.com/0EOzJkz.gif"
       alt="workforce"
       title="workforce"
-   width="400" 
-    /><
+    />
 
  
 
