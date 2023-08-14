@@ -16,9 +16,9 @@
 
 
   </p>
-
+<p>
 <a href="https://github.com/stevenselcuk/workforce/releases/download/Initial/workforce.zip" target="_blank">
-Download: 📦 v1.0.0
+Download: 📦 v1.0.0</a>
   </p>
 
 workforce is free but you can still support my work 👇🏻
