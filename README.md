@@ -21,7 +21,9 @@
 Download: 📦 v1.0.0
   </p>
 
+workforce is free but you can still support my work 👇🏻
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Z8Z56MT8M)
 
 ##  About
 
